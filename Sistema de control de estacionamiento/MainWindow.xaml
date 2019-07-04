@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Sistema_de_control_de_estacionamiento"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Grid Background="#018786">
         <Button Content="Button" Margin="88,268,570,89"/>
 
     </Grid>
