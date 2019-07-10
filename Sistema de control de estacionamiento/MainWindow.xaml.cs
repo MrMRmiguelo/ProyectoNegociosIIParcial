@@ -24,13 +24,16 @@ namespace Sistema_de_control_de_estacionamiento
     public partial class MainWindow : Window
     {
         SqlConnection sqlConnection;
- 
+
         public MainWindow()
         {
             InitializeComponent();
             string connectionString = ConfigurationManager.ConnectionStrings["Sistema_de_control_de_estacionamiento.Properties.Settings.Parqueo"].ConnectionString;
             sqlConnection = new SqlConnection(connectionString);
-            MostrarTipoVehiculo();
+            Mostrar();
+            MostrarColor();
+            MostrarTipo();
+
 
         }
 
@@ -50,44 +53,194 @@ namespace Sistema_de_control_de_estacionamiento
 
         }
 
-        private void LblAuto_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void MostrarVehiculo()
         {
 
         }
+        /*   private void MostrarReporte()
+           {
+               try
+               {
+                   string query = "SELECT * FROM Parking.Registro";
+                   //   SELECT * FROM Parking.Vehiculo";
+                   SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, sqlConnection);
+                   using (sqlDataAdapter)
+                   {
+                       DataTable tablaTipo = new DataTable();
+                       sqlDataAdapter.Fill(tablaTipo);
+                       //   lbReportes.DisplayMemberPath = "TipoVehiculo";
+                       lbReporteFechaEntrada.DisplayMemberPath = "HoraEntrada";
+                       lbReporteFechaSalida.DisplayMemberPath = "HoraSalida";
+                       lbReportes.DisplayMemberPath = "Placa";
+                       lbReportes.SelectedValue = "Id";
+                       lbReporteFechaEntrada.SelectedValue = "IdEntrada";
+                       lbReportes.ItemsSource = tablaTipo.DefaultView;
+                       lbReporteFechaEntrada.ItemsSource = tablaTipo.DefaultView;
+                       lbReporteFechaSalida.ItemsSource = tablaTipo.DefaultView;
 
-        private void LblTipoAuto_SelectionChanged(object sender, SelectionChangedEventArgs e)
+
+                   }
+               }
+               catch (Exception ex)
+               {
+                   MessageBox.Show(ex.ToString());
+               }
+           }
+           */
+        private void Button_Click_4(object sender, RoutedEventArgs e)
         {
+            if (txtPlaca.Text == string.Empty || txtTipo.Text == string.Empty || txtColor.Text == string.Empty)
+            {
+                MessageBox.Show("No debe de dejar ningun campo vacio");
+                txtPlaca.Focus();
+                txtColor.Focus();
+                txtTipo.Focus();
+            }
+            else
+            {
+                try
+                {
+                    string query = ("INSERT INTO Parking.Vehiculo(Placa,TipoVehiculo,ColorVehiculo) VALUES(@Placa,@TipoVehiculo,@ColorVehiculo)");
+                    SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                    sqlConnection.Open();
+                    sqlCommand.Parameters.AddWithValue("@Placa", txtPlaca.Text);
+                    sqlCommand.Parameters.AddWithValue("@TipoVehiculo", txtTipo.Text);
+                    sqlCommand.Parameters.AddWithValue("@ColorVehiculo", txtColor.Text);
+                    sqlCommand.ExecuteNonQuery();
+                    txtPlaca.Text = String.Empty;
+                    txtColor.Text = String.Empty;
+                    txtTipo.Text = String.Empty;
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+
+                }
+                finally
+                {
+                    sqlConnection.Close();
+                    MostrarVehiculo();
+                }
+            }
+        }
+
+        private void BtnSalir_Click(object sender, RoutedEventArgs e)
+        {
+
 
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Mostrar()
         {
+            try
+            {
+                string query = "SELECT * FROM Parking.Vehiculo ";
 
-        }
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, sqlConnection);
 
-        private void BtnReporte_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-        private void MostrarTipoVehiculo()
-        {
-            try { 
-            string query = "SELECT * FROM ESTACIONAMIENTO.TipoVehiculo";
-                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query,sqlConnection);
                 using (sqlDataAdapter)
                 {
-                    DataTable tablaTipo = new DataTable();
-                    sqlDataAdapter.Fill(tablaTipo);
-                    lblTipoAuto.DisplayMemberPath = "tipoCarro";
-                    lblTipoAuto.SelectedValue = "id";
-                    lblTipoAuto.ItemsSource = tablaTipo.DefaultView;
+                    DataTable tablaVehiculo = new DataTable();
+                    sqlDataAdapter.Fill(tablaVehiculo);
+                    lblPlaca.DisplayMemberPath = "Placa";
+                    lblPlaca.SelectedValue = "Id";
+                    lblPlaca.ItemsSource = tablaVehiculo.DefaultView;
+                }
 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+
+            }
+        }
+        private void MostrarTipo()
+        {
+            try
+            {
+                string query = "SELECT * FROM Parking.Vehiculo ";
+
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, sqlConnection);
+
+                using (sqlDataAdapter)
+                {
+                    DataTable tablaVehiculo = new DataTable();
+                    sqlDataAdapter.Fill(tablaVehiculo);
+                    lblTipo.DisplayMemberPath = "TipoVehiculo";
+                    lblTipo.SelectedValue = "Id";
+                    lblTipo.ItemsSource = tablaVehiculo.DefaultView;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+
+            }
+        }
+
+        private void MostrarColor()
+        {
+            try
+            {
+                string query = "SELECT * FROM Parking.Vehiculo ";
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+
+                using (sqlDataAdapter)
+                {
+                    DataTable tablaVehiculo = new DataTable();
+                    sqlDataAdapter.Fill(tablaVehiculo);
+                    lblColor.DisplayMemberPath = "ColorVehiculo";
+                    lblColor.SelectedValue = "Id";
+                    lblColor.ItemsSource = tablaVehiculo.DefaultView;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+
+            }
+        }
+
+
+
+
+
+
+
+        private void MostrarDetalle()
+        {
+            try
+            {
+                string query = @"SELECT * FROM Parking.Registro a INNER JOIN Parking.Vehiculo b
+                                  ON a.IdEntrada=b.Id WHERE a.Id=@ParkingId";
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+                using (sqlDataAdapter)
+                {
+                    sqlCommand.Parameters.AddWithValue("@ParkingId", lblPlaca.SelectedValue);
+                    DataTable registro = new DataTable();
+                    sqlDataAdapter.Fill(registro);
+                    lbReporteFechaEntrada.DisplayMemberPath = "HoraEntrada";
+                    lbReporteFechaEntrada.SelectedValuePath = "IdEntrada";
+                    lbReporteFechaEntrada.ItemsSource = registro.DefaultView;
                 }
             }
             catch(Exception ex)
             {
+                MessageBox.Show(ex.ToString());
 
             }
+
+    }
+
+        private void LblPlaca_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MostrarDetalle();
         }
     }
 }

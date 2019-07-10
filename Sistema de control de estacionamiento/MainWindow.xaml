@@ -4,6 +4,7 @@
      TextElement.FontSize="13"
      TextOptions.TextFormattingMode="Ideal"
      TextOptions.TextRenderingMode="Auto"
+
      Background="{DynamicResource MaterialDesignPaper}"
      FontFamily="{DynamicResource MaterialDesignFont}"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -18,14 +19,30 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Border Grid.Row="0" Background="Transparent" MouseLeftButtonDown="Border_MouseLeftButtonDown">
+        <Grid Grid.Column="6" Grid.Row="1" >
+            <Image Height="90" VerticalAlignment="Top"/>
+            <Ellipse Height="90" Width="90" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="10 0">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="icon/1554271487_1.png" Stretch="UniformToFill"/>
+                </Ellipse.Fill>
+            </Ellipse>
+
+        </Grid>
+
+        <Border Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="6" Background="Transparent" MouseLeftButtonDown="Border_MouseLeftButtonDown">
             <Grid>
                 <materialDesign:ColorZone Mode="PrimaryDark">
                     <StackPanel HorizontalAlignment="Right">
@@ -36,54 +53,66 @@
                 </materialDesign:ColorZone>
             </Grid>
         </Border>
-        <Border Grid.Row="1" Grid.ColumnSpan="2" Background="Transparent" MouseLeftButtonDown="Border_MouseLeftButtonDown_1">
+        <Border Grid.Row="1" Grid.ColumnSpan="6" Background="Transparent" MouseLeftButtonDown="Border_MouseLeftButtonDown_1">
             <Grid>
                 <materialDesign:ColorZone Mode="PrimaryDark">
                     <TextBlock Text="SISTEMA ESTACIONAMIENTO" FontSize="35" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="30 50 0 10"/>
                 </materialDesign:ColorZone>
             </Grid>
         </Border>
-        <Border Grid.Row="4" Background="Transparent" >
-            <StackPanel Orientation="Vertical">
-                <Button Name="btnReporte" Content="Reporte" Width="100" HorizontalAlignment="Right" Margin="3" Click="BtnReporte_Click"/>
-            </StackPanel>
-        </Border>
-        <Border Grid.Row="4" Background="Transparent">
-            <StackPanel Orientation="Vertical">
-                <Button Content="Salir" Width="100" HorizontalAlignment="Center" Margin="3"/>
-
-            </StackPanel>
-        </Border>
-        <Border Grid.Row="4" Background="Transparent">
-            <StackPanel Orientation="Vertical">
-                <Button  Content="Entrar" Width="100" HorizontalAlignment="Left" Margin="3"/>
-
-            </StackPanel>
-        </Border>
-        <Border Grid.Row="2">
+        <Border Grid.Row="5" Grid.ColumnSpan="6" Background="Transparent">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Label Name="lTipoAuto" Content="Tipo de auto" FontWeight="Bold"/>
-                <ListBox Name="lblTipoAuto" Grid.Column="0" SelectionChanged="LblTipoAuto_SelectionChanged"/>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Button Grid.Column="0" Content="Entrar" Height="25" Width="100" Margin="5" Click="Button_Click_4"/>
+                <Button Grid.Column="1" Content="Salir" Height="25" Width="100" Name="btnSalir" Click="BtnSalir_Click"/>
+
+
             </Grid>
         </Border>
-        <Border Grid.Row="3">
+        <Border Grid.Row="4" Grid.ColumnSpan="6">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <StackPanel Orientation="Horizontal">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Column="0">
                 <materialDesign:PackIcon Kind="Car" Foreground="{Binding ElementName=txtPlaca,Path=BorderBrush}" VerticalAlignment="Bottom" Margin="0 4"/>
-                <TextBox Name="txtPlaca" materialDesign:HintAssist.IsFloating="True" Width="300" materialDesign:HintAssist.Hint="Ingrese el numero de placa" FontSize="12" Grid.Row="1"/>
+                <TextBox Name="txtPlaca" materialDesign:HintAssist.IsFloating="True"  Width="150" materialDesign:HintAssist.Hint="Ingrese el numero de placa" FontSize="12" Grid.Row="1"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="1">
+                    <materialDesign:PackIcon Kind="ColorLens" Foreground="{Binding ElementName=txtColor,Path=BorderBrush}" VerticalAlignment="Bottom" Margin="0 4"/>
+                    <TextBox Name="txtColor" materialDesign:HintAssist.IsFloating="True" Width="150" materialDesign:HintAssist.Hint="Ingrese el color" FontSize="12" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="2">
+                    <materialDesign:PackIcon Kind="CarConvertible" Foreground="{Binding ElementName=txtTipo,Path=BorderBrush}" VerticalAlignment="Bottom" Margin="0 4"/>
+                    <TextBox Name="txtTipo" materialDesign:HintAssist.IsFloating="True" Width="150" materialDesign:HintAssist.Hint="Ingrese el tipo de automovil" FontSize="12" />
                 </StackPanel>
             </Grid>
         </Border>
+        <Label Content="Placa" Grid.Row="2" Grid.Column="0" />
+        <Label Content="Tipo de auto" Grid.Row="2" Grid.Column="1"/>
+        <Label Content="Color de auto" Grid.Row="2" Grid.Column="2"/>
+        <ListBox Name="lblPlaca" Grid.Row="3" Grid.Column="0"  SelectionChanged="LblPlaca_SelectionChanged"/>
+        <ListBox Name="lblTipo" Grid.Column="1" Grid.Row="3"  Margin="5"/>
+        <ListBox Name="lblColor" Grid.Column="2" Grid.Row="3" />
+        <Label Content="# Placa" Grid.Column="3"  Grid.Row="2"/>
+        <Label Content="Hora de entrada" Grid.Column="4"  Grid.Row="2"/>
+        <Label Content="Hora de salida" Grid.Column="5" Grid.Row="2"/>
+        <ListBox Name="lbReportes" Grid.Column="3" Grid.Row="2"/>
+        <ListBox  Name="lbReporteFechaEntrada" Grid.Column="4" Grid.Row="2"/>
+        <ListBox  Name="lbReporteFechaSalida" Grid.Column="5" Grid.Row="2"/>
+
 
     </Grid>
 </Window>
