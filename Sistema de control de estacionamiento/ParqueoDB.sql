@@ -12,24 +12,46 @@ DROP DATABASE Parqueo
 END
 GO
 
+
 CREATE DATABASE Parqueo
+ON PRIMARY
+(
+	NAME='LA_GUADALUPANA_DATA',
+	FILENAME='C:\Users\Miguel\Source\Repos\Sistema de control de estacionamientos\Sistema de control de estacionamientos\Parqueo.mdf',
+	SIZE=10MB,
+	MAXSIZE=10GB,
+	FILEGROWTH=1MB
+)
+LOG ON
+(
+	NAME='LA_GUADALUPANA__LOG',
+	FILENAME='C:\Users\Miguel\Source\Repos\Sistema de control de estacionamientos\Sistema de control de estacionamientos\Parqueo_LOG.ldf',
+	SIZE=10MB,
+	MAXSIZE=1GB,
+	FILEGROWTH=5MB
+)
+GO
 GO
 
 USE Parqueo
 GO
 
-CREATE SCHEMA ESTACIONAMIENTO
+CREATE SCHEMA Parking
 GO
 
-CREATE TABLE ESTACIONAMIENTO.TipoVehiculo(
-id INT NOT NULL  IDENTITY(1,1) 
-CONSTRAINT PK_id_Tipo_Vehiculo PRIMARY KEY CLUSTERED,
-tipoCarro NVARCHAR(30) NOT NULL,
+CREATE TABLE Parking.Vehiculo
+(
+Id INT IDENTITY(1,1) CONSTRAINT PK_Parking_Vehiculo_Id PRIMARY KEY NONCLUSTERED NOT NULL,
+Placa NVARCHAR (7) NOT NULL,
+TipoVehiculo NVARCHAR(50) NOT NULL,
+ColorVehiculo NVARCHAR(20) NOT NULL
 )
 GO
 
-INSERT INTO ESTACIONAMIENTO.TipoVehiculo(tipoCarro)
-VALUES('LIVIANO'),
-('PESADO'),
-('MOTOCICLETA')
+CREATE TABLE Parking.Registro
+(
+IdEntrada INT IDENTITY(00001,1) CONSTRAINT PK_Parking_Vehiculo_IdEntrada PRIMARY KEY NONCLUSTERED NOT NULL,
+HoraEntrada  DATETIME2 DEFAULT GETDATE() NOT NULL,
+HoraSalida DATETIME2 DEFAULT GETDATE() NOT NULL
+)
 GO
