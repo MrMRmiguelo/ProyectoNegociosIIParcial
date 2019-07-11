@@ -55,3 +55,6 @@ HoraEntrada  DATETIME2 DEFAULT GETDATE() NOT NULL,
 HoraSalida DATETIME2 DEFAULT GETDATE() NOT NULL
 )
 GO
+
+SELECT a.Placa AS PLACA, b.HoraEntrada AS HoraEntrada ,b.HoraSalida AS HoraSalida FROM Parking.Vehiculo a INNER JOIN Parking.Registro b
+ON a.Id=b.IdEntrada

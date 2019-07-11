@@ -33,6 +33,7 @@ namespace Sistema_de_control_de_estacionamiento
             Mostrar();
             MostrarColor();
             MostrarTipo();
+            Registro();
 
 
         }
@@ -210,37 +211,53 @@ namespace Sistema_de_control_de_estacionamiento
 
 
 
-
-
-        private void MostrarDetalle()
+      private void BtnReporte_Click(object sender, RoutedEventArgs e)
         {
+            SqlCommand sqlCommand = new SqlCommand("Parking.SP_MuestraPlacaHoraEntrada", sqlConnection);
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+
             try
             {
-                string query = @"SELECT * FROM Parking.Registro a INNER JOIN Parking.Vehiculo b
-                                  ON a.IdEntrada=b.Id WHERE a.Id=@ParkingId";
-                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
-                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
-                using (sqlDataAdapter)
-                {
-                    sqlCommand.Parameters.AddWithValue("@ParkingId", lblPlaca.SelectedValue);
-                    DataTable registro = new DataTable();
-                    sqlDataAdapter.Fill(registro);
-                    lbReporteFechaEntrada.DisplayMemberPath = "HoraEntrada";
-                    lbReporteFechaEntrada.SelectedValuePath = "IdEntrada";
-                    lbReporteFechaEntrada.ItemsSource = registro.DefaultView;
-                }
+                sqlCommand.Parameters.Add(new SqlParameter("placa", SqlDbType.NVarChar, 7));
+                sqlCommand.Parameters["placa"].Value = lblPlaca.SelectedValue.ToString();
+                sqlConnection.Open();
+
+                if (lblPlaca.SelectedItem == null)
+                    MessageBox.Show("Seleccion una placa de la lista");
+                else
+                    sqlCommand.ExecuteNonQuery();
+
+
+
             }
-            catch(Exception ex)
-            {
+            catch (Exception ex) {
                 MessageBox.Show(ex.ToString());
 
             }
+        }
 
-    }
+        
+
 
         private void LblPlaca_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            MostrarDetalle();
+            Registro();
+       }
+        private void Registro()
+        {
+            sqlConnection.Open();
+        //    string query = @"SELECT a.Placa AS PLACA, b.HoraEntrada AS HoraEntrada ,b.HoraSalida AS HoraSalida 
+          //                  FROM Parking.Vehiculo a INNER JOIN Parking.Registro b
+            //                 ON a.Id = b.IdEntrada";
+            SqlCommand sqlCommand = new SqlCommand("Parking.SP_MuestraPlaca", sqlConnection);
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+             DataTable tabla = new DataTable();
+            sqlDataAdapter.Fill(tabla);
+            dt.ItemsSource = tabla.DefaultView;
+                
+            
         }
     }
 }
