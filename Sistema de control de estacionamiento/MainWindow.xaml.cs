@@ -28,12 +28,10 @@ namespace Sistema_de_control_de_estacionamiento
         public MainWindow()
         {
             InitializeComponent();
-            string connectionString = ConfigurationManager.ConnectionStrings["Sistema_de_control_de_estacionamiento.Properties.Settings.Parqueo"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings["Sistema_de_control_de_estacionamiento.Properties.Settings.Estacionamiento"].ConnectionString;
             sqlConnection = new SqlConnection(connectionString);
-            Mostrar();
-            MostrarColor();
-            MostrarTipo();
-            Registro();
+           Mostrar();
+        Registro();
 
 
         }
@@ -58,55 +56,23 @@ namespace Sistema_de_control_de_estacionamiento
         {
 
         }
-        /*   private void MostrarReporte()
-           {
-               try
-               {
-                   string query = "SELECT * FROM Parking.Registro";
-                   //   SELECT * FROM Parking.Vehiculo";
-                   SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, sqlConnection);
-                   using (sqlDataAdapter)
-                   {
-                       DataTable tablaTipo = new DataTable();
-                       sqlDataAdapter.Fill(tablaTipo);
-                       //   lbReportes.DisplayMemberPath = "TipoVehiculo";
-                       lbReporteFechaEntrada.DisplayMemberPath = "HoraEntrada";
-                       lbReporteFechaSalida.DisplayMemberPath = "HoraSalida";
-                       lbReportes.DisplayMemberPath = "Placa";
-                       lbReportes.SelectedValue = "Id";
-                       lbReporteFechaEntrada.SelectedValue = "IdEntrada";
-                       lbReportes.ItemsSource = tablaTipo.DefaultView;
-                       lbReporteFechaEntrada.ItemsSource = tablaTipo.DefaultView;
-                       lbReporteFechaSalida.ItemsSource = tablaTipo.DefaultView;
-
-
-                   }
-               }
-               catch (Exception ex)
-               {
-                   MessageBox.Show(ex.ToString());
-               }
-           }
-           */
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            if (txtPlaca.Text == string.Empty || txtTipo.Text == string.Empty || txtColor.Text == string.Empty)
+            if (txtPlaca.Text == string.Empty || txtTipo.Text == string.Empty)
             {
                 MessageBox.Show("No debe de dejar ningun campo vacio");
                 txtPlaca.Focus();
-                txtColor.Focus();
                 txtTipo.Focus();
             }
             else
             {
                 try
                 {
-                    string query = ("INSERT INTO Parking.Vehiculo(Placa,TipoVehiculo,ColorVehiculo) VALUES(@Placa,@TipoVehiculo,@ColorVehiculo)");
-                    SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                    SqlCommand sqlCommand = new SqlCommand("Vehiculos.SP_AGREGAR_VEHICULO", sqlConnection);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
                     sqlConnection.Open();
-                    sqlCommand.Parameters.AddWithValue("@Placa", txtPlaca.Text);
-                    sqlCommand.Parameters.AddWithValue("@TipoVehiculo", txtTipo.Text);
-                    sqlCommand.Parameters.AddWithValue("@ColorVehiculo", txtColor.Text);
+                    sqlCommand.Parameters.AddWithValue("@numPlaca", txtPlaca.Text);
+                    sqlCommand.Parameters.AddWithValue("@tipoVehiculo", txtTipo.Text);
                     sqlCommand.ExecuteNonQuery();
                     txtPlaca.Text = String.Empty;
                     txtColor.Text = String.Empty;
@@ -121,22 +87,53 @@ namespace Sistema_de_control_de_estacionamiento
                 finally
                 {
                     sqlConnection.Close();
-                    MostrarVehiculo();
+                    Mostrar();
+                    Registro();
                 }
             }
         }
 
         private void BtnSalir_Click(object sender, RoutedEventArgs e)
         {
+           if (txtPlaca.Text == string.Empty)
+            {
+                MessageBox.Show("No debe de dejar ningun campo vacio");
+                txtPlaca.Focus();
+            }
+            else
+            {
+                try
+                {
+                    SqlCommand sqlCommand = new SqlCommand("Vehiculos.SP_AGREGAR_SALIDA ", sqlConnection);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    sqlConnection.Open();
+                    sqlCommand.Parameters.AddWithValue("@numPlacaES",txtPlaca.Text);
+ 
+                    sqlCommand.ExecuteNonQuery();
+                    txtPlaca.Text = String.Empty;
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+
+                }
+                finally
+                {
+                    sqlConnection.Close();
+                    Mostrar();
+                    Registro();
+                }
+           }
 
 
-        }
+    }
 
         private void Mostrar()
         {
             try
             {
-                string query = "SELECT * FROM Parking.Vehiculo ";
+                string query = "SELECT * FROM Vehiculos.vehiculo ";
 
                 SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, sqlConnection);
 
@@ -144,8 +141,8 @@ namespace Sistema_de_control_de_estacionamiento
                 {
                     DataTable tablaVehiculo = new DataTable();
                     sqlDataAdapter.Fill(tablaVehiculo);
-                    lblPlaca.DisplayMemberPath = "Placa";
-                    lblPlaca.SelectedValue = "Id";
+                    lblPlaca.DisplayMemberPath = "numPlacaE";
+                    lblPlaca.SelectedValue = "idVehiculoE";
                     lblPlaca.ItemsSource = tablaVehiculo.DefaultView;
                 }
 
@@ -160,7 +157,7 @@ namespace Sistema_de_control_de_estacionamiento
         {
             try
             {
-                string query = "SELECT * FROM Parking.Vehiculo ";
+                string query = "SELECT * FROM Vehiculos.vehiculo";
 
                 SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, sqlConnection);
 
@@ -168,8 +165,8 @@ namespace Sistema_de_control_de_estacionamiento
                 {
                     DataTable tablaVehiculo = new DataTable();
                     sqlDataAdapter.Fill(tablaVehiculo);
-                    lblTipo.DisplayMemberPath = "TipoVehiculo";
-                    lblTipo.SelectedValue = "Id";
+                    lblTipo.DisplayMemberPath = "tipoVehiculoE";
+                    lblTipo.SelectedValue = "numPlacaE";
                     lblTipo.ItemsSource = tablaVehiculo.DefaultView;
                 }
 
@@ -181,31 +178,7 @@ namespace Sistema_de_control_de_estacionamiento
             }
         }
 
-        private void MostrarColor()
-        {
-            try
-            {
-                string query = "SELECT * FROM Parking.Vehiculo ";
-                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
-
-                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
-
-                using (sqlDataAdapter)
-                {
-                    DataTable tablaVehiculo = new DataTable();
-                    sqlDataAdapter.Fill(tablaVehiculo);
-                    lblColor.DisplayMemberPath = "ColorVehiculo";
-                    lblColor.SelectedValue = "Id";
-                    lblColor.ItemsSource = tablaVehiculo.DefaultView;
-                }
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-
-            }
-        }
+       
 
 
 
@@ -213,28 +186,6 @@ namespace Sistema_de_control_de_estacionamiento
 
       private void BtnReporte_Click(object sender, RoutedEventArgs e)
         {
-            SqlCommand sqlCommand = new SqlCommand("Parking.SP_MuestraPlacaHoraEntrada", sqlConnection);
-            sqlCommand.CommandType = CommandType.StoredProcedure;
-
-
-            try
-            {
-                sqlCommand.Parameters.Add(new SqlParameter("placa", SqlDbType.NVarChar, 7));
-                sqlCommand.Parameters["placa"].Value = lblPlaca.SelectedValue.ToString();
-                sqlConnection.Open();
-
-                if (lblPlaca.SelectedItem == null)
-                    MessageBox.Show("Seleccion una placa de la lista");
-                else
-                    sqlCommand.ExecuteNonQuery();
-
-
-
-            }
-            catch (Exception ex) {
-                MessageBox.Show(ex.ToString());
-
-            }
         }
 
         
@@ -242,22 +193,22 @@ namespace Sistema_de_control_de_estacionamiento
 
         private void LblPlaca_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Registro();
+            MostrarTipo();
        }
         private void Registro()
         {
+            
             sqlConnection.Open();
-        //    string query = @"SELECT a.Placa AS PLACA, b.HoraEntrada AS HoraEntrada ,b.HoraSalida AS HoraSalida 
-          //                  FROM Parking.Vehiculo a INNER JOIN Parking.Registro b
-            //                 ON a.Id = b.IdEntrada";
-            SqlCommand sqlCommand = new SqlCommand("Parking.SP_MuestraPlaca", sqlConnection);
+            SqlCommand sqlCommand = new SqlCommand("Vehiculos.SP_PLACA_HORA_ENTRADA_SALIDA", sqlConnection);
             sqlCommand.CommandType = CommandType.StoredProcedure;
             SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
              DataTable tabla = new DataTable();
             sqlDataAdapter.Fill(tabla);
             dt.ItemsSource = tabla.DefaultView;
-                
-            
+            sqlConnection.Close();
+
+
+
         }
     }
 }

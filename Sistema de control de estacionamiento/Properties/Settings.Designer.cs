@@ -26,11 +26,11 @@ namespace Sistema_de_control_de_estacionamiento.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=LAPTOP-RTAH6NE8\\SQLEXPRESS;Initial Catalog=Parqueo;Integrated Securit" +
-            "y=True")]
-        public string Parqueo {
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=LAPTOP-RTAH6NE8\\SQLEXPRESS;Initial Catalog=Estacionamiento;Integrated" +
+            " Security=True")]
+        public string Estacionamiento {
             get {
-                return ((string)(this["Parqueo"]));
+                return ((string)(this["Estacionamiento"]));
             }
         }
     }

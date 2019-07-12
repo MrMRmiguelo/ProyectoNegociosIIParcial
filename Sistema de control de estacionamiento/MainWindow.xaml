@@ -86,6 +86,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
 
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.Column="0">
@@ -99,6 +100,10 @@
                 <StackPanel Orientation="Horizontal" Grid.Column="2">
                     <materialDesign:PackIcon Kind="CarConvertible" Foreground="{Binding ElementName=txtTipo,Path=BorderBrush}" VerticalAlignment="Bottom" Margin="0 4"/>
                     <TextBox Name="txtTipo" materialDesign:HintAssist.IsFloating="True" Width="150" materialDesign:HintAssist.Hint="Liviano,Pesado,Motocicleta" FontSize="12"  Margin="6 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="3">
+                    <materialDesign:PackIcon Kind="CarConvertible" Foreground="{Binding ElementName=txtTipo,Path=BorderBrush}" VerticalAlignment="Bottom" Margin="0 4"/>
+                    <TextBox Name="txtid" materialDesign:HintAssist.IsFloating="True" Width="150" materialDesign:HintAssist.Hint="Liviano,Pesado,Motocicleta" FontSize="12"  Margin="6 0" />
                 </StackPanel>
             </Grid>
         </Border>
