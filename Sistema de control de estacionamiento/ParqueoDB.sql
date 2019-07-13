@@ -4,57 +4,156 @@ Proyecto II Parcial - Programacion de negocios
 Fecha 03/Julio/2019
 */
 USE tempdb
-GO 
+GO
 
-IF EXISTS (SELECT * FROM sys.databases WHERE name='Parqueo')
-BEGIN 
-DROP DATABASE Parqueo
+IF not EXISTS(SELECT * FROM sys.databases WHERE [name] = 'Estacionamiento')
+	BEGIN
+		CREATE DATABASE Estacionamiento
+	END
+GO
+
+
+USE Estacionamiento
+go
+
+CREATE SCHEMA Vehiculos
+GO
+
+
+CREATE TABLE Vehiculos.vehiculo(
+ID NUMERIC (9) NOT NULL,
+idVehiculoE INT IDENTITY(1,1) NOT NULL PRIMARY KEY NONCLUSTERED,
+numPlacaE NVARCHAR(7) NOT NULL,
+tipoVehiculoE NVARCHAR(30)NOT NULL,
+horaEntrada TIME DEFAULT GETDATE() NULL,
+horaSalida TIME DEFAULT GETDATE() NULL
+)
+GO
+CREATE TABLE Vehiculos.vehiculoR(
+idVehiculoR INT IDENTITY(1,1) NOT NULL PRIMARY KEY NONCLUSTERED,
+numPlacaR NVARCHAR(7) NOT NULL,
+tipoVehiculoR NVARCHAR(30)NOT NULL,
+horaEntradaR TIME DEFAULT GETDATE()
+)
+GO
+
+CREATE TABLE Vehiculos.vehiculoSalida(
+idVehiculoS INT IDENTITY(1,1)NOT NULL,
+numPlacaS NVARCHAR(7)NOT NULL,
+
+)
+GO
+
+CREATE PROCEDURE Vehiculos.SP_AGREGAR_VEHICULO @numPlaca NVARCHAR(7),@tipoVehiculo NVARCHAR(30)
+AS
+BEGIN TRANSACTION
+     BEGIN TRY
+		  IF EXISTS(SELECT * FROM Vehiculos.vehiculo WHERE numPlacaE=@numPlaca)
+		     BEGIN
+			 PRINT 'LA PLACA YA EXISTE'
+			   END
+		 ELSE
+		 BEGIN
+		       INSERT INTO Vehiculos.vehiculo(numPlacaE,tipoVehiculoE)
+			   VALUES(@numPlaca,@tipoVehiculo)
+			   INSERT INTO Vehiculos.vehiculoR(numPlacaR,tipoVehiculoR)
+			   VALUES(@numPlaca,@tipoVehiculo)
+		 END
+			  COMMIT
+		 END TRY
+    BEGIN CATCH
+	  ROLLBACK TRANSACTION
+	END CATCH
+GO
+
+CREATE PROC Vehiculos.SP_PLACA_HORA_ENTRADA_SALIDA
+AS
+BEGIN
+SELECT a.numPlacaR as placa,a.horaEntradaR as horaE,b.horaSalida
+FROM Vehiculos.vehiculoR a INNER JOIN Vehiculos.vehiculoSalida b
+ON a.numPlacaR=b.numPlacaS
 END
 GO
 
 
-CREATE DATABASE Parqueo
-ON PRIMARY
-(
-	NAME='LA_GUADALUPANA_DATA',
-	FILENAME='C:\Users\Miguel\Source\Repos\Sistema de control de estacionamientos\Sistema de control de estacionamientos\Parqueo.mdf',
-	SIZE=10MB,
-	MAXSIZE=10GB,
-	FILEGROWTH=1MB
-)
-LOG ON
-(
-	NAME='LA_GUADALUPANA__LOG',
-	FILENAME='C:\Users\Miguel\Source\Repos\Sistema de control de estacionamientos\Sistema de control de estacionamientos\Parqueo_LOG.ldf',
-	SIZE=10MB,
-	MAXSIZE=1GB,
-	FILEGROWTH=5MB
-)
-GO
-GO
-
-USE Parqueo
-GO
-
-CREATE SCHEMA Parking
+CREATE PROCEDURE Vehiculos.SP_AGREGAR_SALIDA(@numPlacaES NVARCHAR(7))
+AS
+BEGIN TRANSACTION
+     BEGIN TRY 
+	IF EXISTS(SELECT * FROM Vehiculos.vehiculo WHERE numPlacaE=@numPlacaES)
+		     BEGIN
+				 INSERT INTO Vehiculos.vehiculoSalida(numPlacaS)
+				 VALUES(@numPlacaES)
+				 DELETE FROM Vehiculos.vehiculo WHERE numPlacaE=@numPlacaES
+			 PRINT 'LA PLACA YA EXISTE'
+   END
+   ELSE
+   BEGIN
+   PRINT 'LA PLACA NO EXISTE'
+   END
+			  COMMIT
+		 END TRY
+    BEGIN CATCH
+	  ROLLBACK TRANSACTION
+	END CATCH
 GO
 
-CREATE TABLE Parking.Vehiculo
-(
-Id INT IDENTITY(1,1) CONSTRAINT PK_Parking_Vehiculo_Id PRIMARY KEY NONCLUSTERED NOT NULL,
-Placa NVARCHAR (7) NOT NULL,
-TipoVehiculo NVARCHAR(50) NOT NULL,
-ColorVehiculo NVARCHAR(20) NOT NULL
-)
+EXEC Vehiculos.SP_AGREGAR_VEHICULO 'PER5352' ,'PESADO'
+GO
+EXEC Vehiculos.SP_AGREGAR_SALIDA 'PER5351'
 GO
 
-CREATE TABLE Parking.Registro
-(
-IdEntrada INT IDENTITY(00001,1) CONSTRAINT PK_Parking_Vehiculo_IdEntrada PRIMARY KEY NONCLUSTERED NOT NULL,
-HoraEntrada  DATETIME2 DEFAULT GETDATE() NOT NULL,
-HoraSalida DATETIME2 DEFAULT GETDATE() NOT NULL
-)
+EXEC Vehiculos.SP_PLACA_HORA_ENTRADA_SALIDA
+GO
+/*
+CREATE PROCEDURE Vehiculos.SP_HorasEntrada
+@id numeric(9)=0,
+@Placa NVARCHAR(7)
+AS
+
+    DECLARE @PlacaRegistro NUMERIC(9) 
+   
+    DECLARE @resultado VARCHAR(20)
+    SET @PlacaRegistro = isnull((SELECT top 1 numPlacaE FROM Vehiculos.vehiculo
+        WHERE ID = @id AND horaSalida IS NULL
+        AND datediff(d,horaEntrada,getdate())<1
+        ),0)
+    
+    IF @PlacaRegistro=0
+     
+    BEGIN
+        INSERT INTO Vehiculos.vehiculo(ID,numPlacaE,horaEntrada,horaSalida)
+        VALUES (@id,@Placa,getdate(),NULL)
+        SET @resultado = 'Hora Entrada'
+    END
+    ELSE
+    BEGIN
+        
+        UPDATE Vehiculos.vehiculo
+        SET
+            horaSalida = getdate()
+        WHERE idVehiculoE=@PlacaRegistro
+        SET @resultado = 'Hora Salida'
+ 
+    END
+    IF @@error<>0
+    BEGIN
+        SET @resultado = 'Error'
+    END	
 GO
 
-SELECT a.Placa AS PLACA, b.HoraEntrada AS HoraEntrada ,b.HoraSalida AS HoraSalida FROM Parking.Vehiculo a INNER JOIN Parking.Registro b
-ON a.Id=b.IdEntrada
+EXEC Vehiculos.SP_HorasEntrada 1,'PER5359'
+GO
+SELECT * FROM Vehiculos.vehiculo
+EXEC Vehiculos.SP_HorasEntrada 2,'PER5359'
+GO
+SELECT * FROM Vehiculos.vehiculo
+EXEC Vehiculos.SP_HorasEntrada 1,'PER5359'
+GO
+SELECT * FROM Vehiculos.vehiculo
+*/
+
+
+SELECT * FROM Vehiculos.vehiculo
+SELECT * FROM Vehiculos.vehiculoR
+SELECT * FROM Vehiculos.vehiculoSalida
