@@ -151,6 +151,57 @@ SELECT * FROM Vehiculos.vehiculo
 EXEC Vehiculos.SP_HorasEntradaYSalida 1,'PER5399'
 GO
 SELECT * FROM Vehiculos.vehiculo
+SELECT DATEDIFF(HOUR,horaEntrada,HoraSalida)DiferenciadeHoras FROM Vehiculos.vehiculo
+
+CREATE FUNCTION Vehiculos.F_CalcularTiempo
+(
+    @Date1 Datetime,
+    @Date2 Datetime,
+    @TYPE VARCHAR(MAX)  
+)                       
+                       
+ 
+RETURNS VARCHAR(MAX)
+AS 
+BEGIN
+    DECLARE @temp VARCHAR(100)
+    DECLARE @horas INT
+    DECLARE @minutos INT
+    DECLARE @tempMINUTOS INT
+    DECLARE @segundos BIGINT
+    
+    SET @segundos = (
+        SELECT
+            datediff(SECOND,@Date1, @Date2) AS Segundos
+    )
+ 
+    SET @temp ='...'
+ 
+    IF (@segundos < 3600) BEGIN
+    
+        SET @minutos =  FLOOR(@minutos / 60)
+        SET @segundos = @minutos % 60
+            
+            IF @TYPE = 1
+                SET @temp = '0 Horas ' + CONVERT(VARCHAR, @minutos) + ' Minutos ' + CONVERT(VARCHAR, @segundos) + ' Segundos'
+            ELSE            
+                SET @temp = '00:' + CONVERT(VARCHAR, @minutos) + ':' +  CONVERT(VARCHAR, @segundos)
+    END ELSE 
+BEGIN 
+    SET @horas = FLOOR(@segundos / 3600)
+    SET @tempMINUTOS = @segundos % 3600
+    SET @minutos = FLOOR(@tempMINUTOS / 60) 
+    SET @segundos = @tempMINUTOS % 60
+      
+        IF @TYPE = 1
+            SET @temp = CONVERT(VARCHAR, @horas) + ' Horas ' + CONVERT(VARCHAR, @minutos) + ' Minutos ' + CONVERT(VARCHAR, @segundos) + ' Segundos'
+        ELSE            
+            SET @temp = CONVERT(VARCHAR, @horas) + ':' + CONVERT(VARCHAR, @minutos) + ':' + CONVERT(VARCHAR, @segundos) 
+END 
+    RETURN @temp
+END
+
+SELECT Vehiculos.F_CalcularTiempo ('2018-11-02 10:18:22.883','2018-12-03 10:20:43.060',1)
 
 
 SELECT * FROM Vehiculos.vehiculo
