@@ -1,11 +1,10 @@
 /*
 MIGUEL VALDEZ y Angel Sorto
 Proyecto II Parcial - Programacion de negocios
-Fecha 03/Julio/2019
+Fecha 12/Julio/2019
 */
 USE tempdb
 GO
-
 IF not EXISTS(SELECT * FROM sys.databases WHERE [name] = 'Estacionamiento')
 	BEGIN
 		CREATE DATABASE Estacionamiento
@@ -22,25 +21,26 @@ GO
 
 CREATE TABLE Vehiculos.vehiculo(
 ID NUMERIC (9) NOT NULL,
-idVehiculoE INT IDENTITY(1,1) NOT NULL PRIMARY KEY NONCLUSTERED,
+idVehiculoE INT IDENTITY(1,1) NOT NULL PRIMARY KEY CLUSTERED,
 numPlacaE NVARCHAR(7) NOT NULL,
-tipoVehiculoE NVARCHAR(30)NOT NULL,
-horaEntrada TIME DEFAULT GETDATE() NULL,
-horaSalida TIME DEFAULT GETDATE() NULL
+tipoVehiculoE NVARCHAR(30)NULL,
+horaEntrada  DATETIME NULL,
+horaSalida  DATETIME NULL
 )
 GO
 CREATE TABLE Vehiculos.vehiculoR(
 idVehiculoR INT IDENTITY(1,1) NOT NULL PRIMARY KEY NONCLUSTERED,
 numPlacaR NVARCHAR(7) NOT NULL,
 tipoVehiculoR NVARCHAR(30)NOT NULL,
-horaEntradaR TIME DEFAULT GETDATE()
+horaEntradaR TIME DEFAULT GETDATE(),
 )
 GO
 
-CREATE TABLE Vehiculos.vehiculoSalida(
+CREATE TABLE Vehiculos.vehiculoSalida
+(
 idVehiculoS INT IDENTITY(1,1)NOT NULL,
 numPlacaS NVARCHAR(7)NOT NULL,
-
+HoraSalida TIME DEFAULT GETDATE()
 )
 GO
 
@@ -69,9 +69,9 @@ GO
 CREATE PROC Vehiculos.SP_PLACA_HORA_ENTRADA_SALIDA
 AS
 BEGIN
-SELECT a.numPlacaR as placa,a.horaEntradaR as horaE,b.horaSalida
-FROM Vehiculos.vehiculoR a INNER JOIN Vehiculos.vehiculoSalida b
-ON a.numPlacaR=b.numPlacaS
+SELECT a.numPlacaR as placa,a.horaEntradaR as horaE,horaSalida
+FROM Vehiculos.vehiculoR a INNER JOIN Vehiculos.vehiculoSalida HoraSalida
+ON a.numPlacaR=numPlacaS
 END
 GO
 
@@ -105,21 +105,21 @@ GO
 
 EXEC Vehiculos.SP_PLACA_HORA_ENTRADA_SALIDA
 GO
-/*
-CREATE PROCEDURE Vehiculos.SP_HorasEntrada
+
+CREATE PROCEDURE Vehiculos.SP_HorasEntradaYSalida
 @id numeric(9)=0,
 @Placa NVARCHAR(7)
 AS
 
-    DECLARE @PlacaRegistro NUMERIC(9) 
+    DECLARE @Verifica NUMERIC(9) 
    
     DECLARE @resultado VARCHAR(20)
-    SET @PlacaRegistro = isnull((SELECT top 1 numPlacaE FROM Vehiculos.vehiculo
+    SET @Verifica = isnull((SELECT top 1 idVehiculoE FROM Vehiculos.vehiculo
         WHERE ID = @id AND horaSalida IS NULL
         AND datediff(d,horaEntrada,getdate())<1
         ),0)
     
-    IF @PlacaRegistro=0
+    IF @Verifica=0
      
     BEGIN
         INSERT INTO Vehiculos.vehiculo(ID,numPlacaE,horaEntrada,horaSalida)
@@ -132,7 +132,7 @@ AS
         UPDATE Vehiculos.vehiculo
         SET
             horaSalida = getdate()
-        WHERE idVehiculoE=@PlacaRegistro
+        WHERE idVehiculoE=@Verifica
         SET @resultado = 'Hora Salida'
  
     END
@@ -142,16 +142,15 @@ AS
     END	
 GO
 
-EXEC Vehiculos.SP_HorasEntrada 1,'PER5359'
+EXEC Vehiculos.SP_HorasEntradaYSalida 1,'PER5399'
 GO
 SELECT * FROM Vehiculos.vehiculo
-EXEC Vehiculos.SP_HorasEntrada 2,'PER5359'
+EXEC Vehiculos.SP_HorasEntradaYSalida 2,'PER5339'
 GO
 SELECT * FROM Vehiculos.vehiculo
-EXEC Vehiculos.SP_HorasEntrada 1,'PER5359'
+EXEC Vehiculos.SP_HorasEntradaYSalida 1,'PER5399'
 GO
 SELECT * FROM Vehiculos.vehiculo
-*/
 
 
 SELECT * FROM Vehiculos.vehiculo

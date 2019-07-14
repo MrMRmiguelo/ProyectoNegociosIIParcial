@@ -73,7 +73,7 @@
                 <Button Grid.Column="0" Content="Entrar" Height="25" Width="100" Margin="5" Click="Button_Click_4"/>
                 <Button Grid.Column="1" Content="Salir" Height="25" Width="100" Name="btnSalir" Click="BtnSalir_Click"/>
                 <Button Grid.Column="2" Content="Reporte" Height="25" Width="100" Name="btnReporte" Click="BtnReporte_Click"/>
-
+                <Button Content="SalidaVehiculo" Height="25" Name="btnSalida_Vehiculo" Click="BtnSalida_Vehiculo_Click" Margin="191,5,193,5" Grid.Column="1" Grid.ColumnSpan="2"/>
 
             </Grid>
         </Border>

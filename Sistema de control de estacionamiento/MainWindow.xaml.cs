@@ -210,5 +210,17 @@ namespace Sistema_de_control_de_estacionamiento
 
 
         }
+        private void BtnSalida_Vehiculo_Click(object sender, RoutedEventArgs e)
+        {
+            sqlConnection.Open();
+            DataTable dataTable = new DataTable();
+            using (sqlConnection)
+            {
+                string query = "SELECT F_CalcularTiempo";
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+                sqlDataAdapter.Fill(dataTable);
+            }
+        }
     }
 }
