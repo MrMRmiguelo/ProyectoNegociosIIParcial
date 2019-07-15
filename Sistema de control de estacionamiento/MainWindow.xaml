@@ -120,12 +120,8 @@
         <ListBox Name="lblPlaca" Grid.Row="3" Grid.Column="0" SelectionChanged="LblPlaca_SelectionChanged"/>
         <ListBox Name="lblTipo" Grid.Column="1" Grid.Row="3"  Margin="5"/>
         <ListBox Name="lblColor" Grid.Column="2" Grid.Row="3" />
-
         <DataGrid Grid.Column="2" Grid.ColumnSpan="5" Grid.Row="3"  Name="dt" materialDesign:DataGridAssist.ColumnHeaderPadding="1">
 
         </DataGrid>
-
-
-
     </Grid>
 </Window>
