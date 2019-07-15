@@ -41,21 +41,33 @@
             </Ellipse>
 
         </Grid>
-
-        <Border Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="6" Background="Transparent" MouseLeftButtonDown="Border_MouseLeftButtonDown">
+        <Border Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="6"  Background="Transparent" MouseLeftButtonDown="Border_MouseLeftButtonDown">
             <Grid>
-                <materialDesign:ColorZone Mode="PrimaryDark">
-                    <StackPanel HorizontalAlignment="Right">
-                        <Button  materialDesign:ShadowAssist.ShadowDepth="Depth3" Width="30" Height="30" Padding="0" Click="Button_Click">
+                <materialDesign:ColorZone Mode="PrimaryDark" Grid.Row="0">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth3" Width="30" Height="30" Padding="0" Click="Button_Click_2">
+                            <materialDesign:PackIcon Kind="WindowMinimize"/>
+                        </Button>
+                        <Button Margin="2"  materialDesign:ShadowAssist.ShadowDepth="Depth3" Width="30" Height="30" Padding="0" Click="Button_Click_1">
+                            <materialDesign:PackIcon Kind="WindowMaximize"/>
+                        </Button>
+
+                        <Button Margin="2" materialDesign:ShadowAssist.ShadowDepth="Depth3" Width="30" Height="30" Padding="0" Click="Button_Click">
                             <materialDesign:PackIcon Kind="WindowClose"/>
                         </Button>
+
                     </StackPanel>
                 </materialDesign:ColorZone>
             </Grid>
         </Border>
+
         <Border Grid.Row="1" Grid.ColumnSpan="6" Background="Transparent" MouseLeftButtonDown="Border_MouseLeftButtonDown_1">
             <Grid>
-                <materialDesign:ColorZone Mode="PrimaryDark">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="39*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <materialDesign:ColorZone Mode="PrimaryDark" Grid.ColumnSpan="2">
                     <TextBlock Text="SISTEMA ESTACIONAMIENTO" FontSize="35" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="30 50 0 10"/>
                 </materialDesign:ColorZone>
             </Grid>
@@ -72,8 +84,7 @@
                 </Grid.RowDefinitions>
                 <Button Grid.Column="0" Content="Entrar" Height="25" Width="100" Margin="5" Click="Button_Click_4"/>
                 <Button Grid.Column="1" Content="Salir" Height="25" Width="100" Name="btnSalir" Click="BtnSalir_Click"/>
-                <Button Grid.Column="2" Content="Reporte" Height="25" Width="100" Name="btnReporte" Click="BtnReporte_Click"/>
-                <Button Content="SalidaVehiculo" Height="25" Name="btnSalida_Vehiculo" Click="BtnSalida_Vehiculo_Click" Margin="191,5,193,5" Grid.Column="1" Grid.ColumnSpan="2"/>
+                <Button Content="SalidaVehiculo" Height="25" Name="btnSalida_Vehiculo" Click="BtnSalida_Vehiculo_Click" Grid.Column="3" />
 
             </Grid>
         </Border>
@@ -89,32 +100,23 @@
                     <ColumnDefinition Width="*"/>
 
                 </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal" Grid.Column="0">
-                <materialDesign:PackIcon Kind="Car" Foreground="{Binding ElementName=txtPlaca,Path=BorderBrush}" VerticalAlignment="Bottom" Margin="0 4" />
-                    <TextBox Name="txtPlaca" materialDesign:HintAssist.IsFloating="True"  Width="150" materialDesign:HintAssist.Hint="Ingrese el numero de placa" FontSize="12" Grid.Row="1" Margin="6 0"/>
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.ColumnSpan="2">
+                    <materialDesign:PackIcon Kind="Car" Foreground="{Binding ElementName=txtPlaca,Path=BorderBrush}" VerticalAlignment="Bottom" Margin="0 4" />
+                    <TextBox KeyDown="TxtPlaca_KeyDown"  Name="txtPlaca" materialDesign:HintAssist.IsFloating="True"  Width="150" materialDesign:HintAssist.Hint="Ingrese el numero de placa" FontSize="12" Grid.Row="1" Margin="6 0"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Column="1">
-                    <materialDesign:PackIcon Kind="ColorLens" Foreground="{Binding ElementName=txtColor,Path=BorderBrush}" VerticalAlignment="Bottom" Margin="0 4"/>
-                    <TextBox Name="txtColor" materialDesign:HintAssist.IsFloating="True" Width="150" materialDesign:HintAssist.Hint="Ingrese el color" FontSize="12"  Margin="6 0"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Column="2">
+                <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.ColumnSpan="4">
                     <materialDesign:PackIcon Kind="CarConvertible" Foreground="{Binding ElementName=txtTipo,Path=BorderBrush}" VerticalAlignment="Bottom" Margin="0 4"/>
                     <TextBox Name="txtTipo" materialDesign:HintAssist.IsFloating="True" Width="150" materialDesign:HintAssist.Hint="Liviano,Pesado,Motocicleta" FontSize="12"  Margin="6 0" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Column="3">
-                    <materialDesign:PackIcon Kind="CarConvertible" Foreground="{Binding ElementName=txtTipo,Path=BorderBrush}" VerticalAlignment="Bottom" Margin="0 4"/>
-                    <TextBox Name="txtid" materialDesign:HintAssist.IsFloating="True" Width="150" materialDesign:HintAssist.Hint="Liviano,Pesado,Motocicleta" FontSize="12"  Margin="6 0" />
                 </StackPanel>
             </Grid>
         </Border>
         <Label Content="Placa" Grid.Row="2" Grid.Column="0" />
         <Label Content="Tipo de auto" Grid.Row="2" Grid.Column="1"/>
-        <Label Content="Color de auto" Grid.Row="2" Grid.Column="2"/>
         <ListBox Name="lblPlaca" Grid.Row="3" Grid.Column="0" SelectionChanged="LblPlaca_SelectionChanged"/>
         <ListBox Name="lblTipo" Grid.Column="1" Grid.Row="3"  Margin="5"/>
         <ListBox Name="lblColor" Grid.Column="2" Grid.Row="3" />
-    <!--    <ListBox Name="lbReportes" Grid.Column="3" Grid.Row="2"/>-->
-        <DataGrid Grid.Column="3" Grid.ColumnSpan="5" Grid.Row="3"  Name="dt" materialDesign:DataGridAssist.ColumnHeaderPadding="1">
+        <!--    <ListBox Name="lbReportes" Grid.Column="3" Grid.Row="2"/>-->
+        <DataGrid Grid.Column="2" Grid.ColumnSpan="5" Grid.Row="3"  Name="dt" materialDesign:DataGridAssist.ColumnHeaderPadding="1">
 
         </DataGrid>
 
