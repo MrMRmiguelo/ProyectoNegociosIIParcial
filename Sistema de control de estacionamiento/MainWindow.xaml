@@ -84,7 +84,7 @@
                 </Grid.RowDefinitions>
                 <Button Grid.Column="0" Content="Entrar" Height="25" Width="100" Margin="5" Click="Button_Click_4"/>
                 <Button Grid.Column="1" Content="Salir" Height="25" Width="100" Name="btnSalir" Click="BtnSalir_Click"/>
-                <Button Content="SalidaVehiculo" Height="25" Name="btnSalida_Vehiculo" Click="BtnSalida_Vehiculo_Click" Grid.Column="3" />
+                <Button Content="Retirar Vehiculo" Height="25" Name="btnSalida_Vehiculo" Click="BtnSalida_Vehiculo_Click" Grid.Column="3" />
 
             </Grid>
         </Border>
@@ -98,15 +98,20 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
 
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.ColumnSpan="2">
                     <materialDesign:PackIcon Kind="Car" Foreground="{Binding ElementName=txtPlaca,Path=BorderBrush}" VerticalAlignment="Bottom" Margin="0 4" />
                     <TextBox KeyDown="TxtPlaca_KeyDown"  Name="txtPlaca" materialDesign:HintAssist.IsFloating="True"  Width="150" materialDesign:HintAssist.Hint="Ingrese el numero de placa" FontSize="12" Grid.Row="1" Margin="6 0"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.ColumnSpan="4">
+                <StackPanel Orientation="Horizontal" Grid.Column="2">
                     <materialDesign:PackIcon Kind="CarConvertible" Foreground="{Binding ElementName=txtTipo,Path=BorderBrush}" VerticalAlignment="Bottom" Margin="0 4"/>
                     <TextBox Name="txtTipo" materialDesign:HintAssist.IsFloating="True" Width="150" materialDesign:HintAssist.Hint="Liviano,Pesado,Motocicleta" FontSize="12"  Margin="6 0" />
+                </StackPanel>
+                <Label Grid.Column="3" Content="Total de vehiculos:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                <StackPanel Orientation="Horizontal" Grid.Column="5">
+                       <ListBox Name="lbReportes"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -115,7 +120,7 @@
         <ListBox Name="lblPlaca" Grid.Row="3" Grid.Column="0" SelectionChanged="LblPlaca_SelectionChanged"/>
         <ListBox Name="lblTipo" Grid.Column="1" Grid.Row="3"  Margin="5"/>
         <ListBox Name="lblColor" Grid.Column="2" Grid.Row="3" />
-        <!--    <ListBox Name="lbReportes" Grid.Column="3" Grid.Row="2"/>-->
+
         <DataGrid Grid.Column="2" Grid.ColumnSpan="5" Grid.Row="3"  Name="dt" materialDesign:DataGridAssist.ColumnHeaderPadding="1">
 
         </DataGrid>

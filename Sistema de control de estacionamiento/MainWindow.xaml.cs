@@ -32,6 +32,7 @@ namespace Sistema_de_control_de_estacionamiento
             sqlConnection = new SqlConnection(connectionString);
            Mostrar();
            Registro();
+            MostrarTotalVehiculo();
 
 
         }
@@ -189,14 +190,39 @@ namespace Sistema_de_control_de_estacionamiento
         }
         private void BtnSalida_Vehiculo_Click(object sender, RoutedEventArgs e)
         {
-            sqlConnection.Open();
-            DataTable dataTable = new DataTable();
-            using (sqlConnection)
+            try
             {
-                string query = "SELECT F_CalcularTiempo";
+                string query = "UPDATE Vehiculo SET HoraSalida = GETDATE() WHERE numPlacaE = @placa";
+
                 SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
-                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
-                sqlDataAdapter.Fill(dataTable);
+
+
+
+                sqlConnection.Open();
+
+                sqlCommand.Parameters.AddWithValue("@placa", txtPlaca.Text);
+                sqlCommand.ExecuteNonQuery();
+
+
+                txtPlaca.Text = String.Empty;
+                string a;
+                a = dt.SelectedValue.ToString();
+                if(txtTipo.Text == "Pesado")
+                MessageBox.Show("El vehiculo con numero de placa: " + a + "\nSe ah retirado exitosamente\nTotal a pagar: L.200.00\n");
+                if (txtTipo.Text == "Liviano")
+                    MessageBox.Show("El vehiculo con numero de placa: " + a + "\nSe ah retirado exitosamente\nTotal a pagar: L.100.00\n");
+                if (txtTipo.Text == "Liviano")
+                    MessageBox.Show("El vehiculo con numero de placa: " + a + "\nSe ah retirado exitosamente\nTotal a pagar: L.50.00\n");
+
+            }
+                catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                sqlConnection.Close();
+                Mostrar();
             }
         }
 
@@ -214,6 +240,22 @@ namespace Sistema_de_control_de_estacionamiento
         {
             this.txtPlaca.MaxLength = 7;
 
+        }
+        private void MostrarTotalVehiculo()
+        {
+            string query = "SELECT COUNT(*) idVehiculoR FROM Vehiculos.vehiculoR";
+            SqlCommand sqlCommand = new SqlCommand(query,sqlConnection);
+            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+
+            using (sqlDataAdapter)
+            {
+                DataTable dat = new DataTable();
+                sqlDataAdapter.Fill(dat);
+                lbReportes.SelectedValuePath = "idVehiculoR";
+                lbReportes.DisplayMemberPath = "idVehiculoR";
+                lbReportes.ItemsSource = dat.DefaultView;
+
+            }
         }
    
     }
