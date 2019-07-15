@@ -14,8 +14,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sistema_de_control_de_estacionamiento"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" WindowStyle="None" AllowsTransparency="True" WindowStartupLocation="CenterScreen">
-    <Grid>
+        Title="MainWindow" Height="450" Width="877" WindowStyle="None" AllowsTransparency="True" WindowStartupLocation="CenterScreen">
+    <Grid Margin="0,0,-535,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="Auto"/>
@@ -70,10 +70,10 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Button Grid.Column="0" Content="Entrar" Height="25" Width="100" Margin="5" Click="Button_Click_4"/>
-                <Button Grid.Column="1" Content="Salir" Height="25" Width="100" Name="btnSalir" Click="BtnSalir_Click"/>
-                <Button Grid.Column="2" Content="Reporte" Height="25" Width="100" Name="btnReporte" Click="BtnReporte_Click"/>
-                <Button Content="SalidaVehiculo" Height="25" Name="btnSalida_Vehiculo" Click="BtnSalida_Vehiculo_Click" Margin="191,5,193,5" Grid.Column="1" Grid.ColumnSpan="2"/>
+                <Button Grid.Column="0" Content="Entrar" Height="25" Width="100" Margin="30,5,341,5" Click="Button_Click_4"/>
+                <Button Grid.Column="2" Content="Salir" Height="25" Width="100" Name="btnSalir" Click="BtnSalir_Click" Margin="157,5,10,5"/>
+                <Button Grid.Column="1" Content="Reporte" Height="25" Width="100" Name="btnReporte" Click="BtnReporte_Click" Grid.ColumnSpan="2" Margin="177,5,256,5"/>
+                <Button Content="SalidaVehiculo" Height="25" Name="btnSalida_Vehiculo" Click="BtnSalida_Vehiculo_Click" Margin="183,5,40,5"/>
 
             </Grid>
         </Border>
@@ -90,7 +90,7 @@
 
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.Column="0">
-                <materialDesign:PackIcon Kind="Car" Foreground="{Binding ElementName=txtPlaca,Path=BorderBrush}" VerticalAlignment="Bottom" Margin="0 4" />
+                    <materialDesign:PackIcon Kind="Car" Foreground="{Binding ElementName=txtPlaca,Path=BorderBrush}" VerticalAlignment="Bottom" Margin="0 4" />
                     <TextBox Name="txtPlaca" materialDesign:HintAssist.IsFloating="True"  Width="150" materialDesign:HintAssist.Hint="Ingrese el numero de placa" FontSize="12" Grid.Row="1" Margin="6 0"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Column="1">
@@ -99,7 +99,7 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Column="2">
                     <materialDesign:PackIcon Kind="CarConvertible" Foreground="{Binding ElementName=txtTipo,Path=BorderBrush}" VerticalAlignment="Bottom" Margin="0 4"/>
-                    <TextBox Name="txtTipo" materialDesign:HintAssist.IsFloating="True" Width="150" materialDesign:HintAssist.Hint="Liviano,Pesado,Motocicleta" FontSize="12"  Margin="6 0" />
+                    <TextBox x:Name="txtTipo" materialDesign:HintAssist.IsFloating="True" Width="150" materialDesign:HintAssist.Hint="Liviano,Pesado,Motocicleta" FontSize="12"  Margin="6,0,6,-1" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Column="3">
                     <materialDesign:PackIcon Kind="CarConvertible" Foreground="{Binding ElementName=txtTipo,Path=BorderBrush}" VerticalAlignment="Bottom" Margin="0 4"/>
@@ -110,13 +110,17 @@
         <Label Content="Placa" Grid.Row="2" Grid.Column="0" />
         <Label Content="Tipo de auto" Grid.Row="2" Grid.Column="1"/>
         <Label Content="Color de auto" Grid.Row="2" Grid.Column="2"/>
+        <Label Content="Hora de Entrada" Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="2" Margin="68,0,65,0"/>
+        <Label Content="Hora de Salida" Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="2" Margin="68,0,65,0"/>
+
+
         <ListBox Name="lblPlaca" Grid.Row="3" Grid.Column="0" SelectionChanged="LblPlaca_SelectionChanged"/>
         <ListBox Name="lblTipo" Grid.Column="1" Grid.Row="3"  Margin="5"/>
         <ListBox Name="lblColor" Grid.Column="2" Grid.Row="3" />
-    <!--    <ListBox Name="lbReportes" Grid.Column="3" Grid.Row="2"/>-->
-        <DataGrid Grid.Column="3" Grid.ColumnSpan="5" Grid.Row="3"  Name="dt" materialDesign:DataGridAssist.ColumnHeaderPadding="1">
-
-        </DataGrid>
+        <!--    <ListBox Name="lbReportes" Grid.Column="3" Grid.Row="2"/>-->
+        <ListBox Name="lblEntrada" Grid.Column="4" Grid.Row="3" Margin="5,0,10,0" SelectionChanged="LblEntrada_SelectionChanged" />
+        <ListBox Name="lblSalida" Grid.Column="5" Grid.Row="3" HorizontalAlignment="Left" Width="235" />
+        <DataGrid Grid.Row="3"  Name="dt" materialDesign:DataGridAssist.ColumnHeaderPadding="1" SelectionChanged="Dt_SelectionChanged" Grid.Column="3"/>
 
 
 

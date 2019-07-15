@@ -31,7 +31,7 @@ namespace Sistema_de_control_de_estacionamiento
             string connectionString = ConfigurationManager.ConnectionStrings["Sistema_de_control_de_estacionamiento.Properties.Settings.Estacionamiento"].ConnectionString;
             sqlConnection = new SqlConnection(connectionString);
            Mostrar();
-        Registro();
+        //Registro();
 
 
         }
@@ -88,7 +88,7 @@ namespace Sistema_de_control_de_estacionamiento
                 {
                     sqlConnection.Close();
                     Mostrar();
-                    Registro();
+                    //Registro();
                 }
             }
         }
@@ -122,7 +122,7 @@ namespace Sistema_de_control_de_estacionamiento
                 {
                     sqlConnection.Close();
                     Mostrar();
-                    Registro();
+                    //Registro();
                 }
            }
 
@@ -177,16 +177,13 @@ namespace Sistema_de_control_de_estacionamiento
 
             }
         }
-
-       
-
-
-
-
+        
 
       private void BtnReporte_Click(object sender, RoutedEventArgs e)
         {
+            Registro();
         }
+        
 
         
 
@@ -195,7 +192,7 @@ namespace Sistema_de_control_de_estacionamiento
         {
             MostrarTipo();
        }
-        private void Registro()
+      private void Registro()
         {
             
             sqlConnection.Open();
@@ -207,20 +204,45 @@ namespace Sistema_de_control_de_estacionamiento
             dt.ItemsSource = tabla.DefaultView;
             sqlConnection.Close();
 
-
+    
 
         }
+        
         private void BtnSalida_Vehiculo_Click(object sender, RoutedEventArgs e)
         {
-            sqlConnection.Open();
-            DataTable dataTable = new DataTable();
-            using (sqlConnection)
-            {
-                string query = "SELECT F_CalcularTiempo";
-                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
-                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
-                sqlDataAdapter.Fill(dataTable);
+            
+                try
+                {
+                    sqlConnection.Open();
+                    DataTable dataTable = new DataTable();
+                    using (sqlConnection)
+                    {
+                        string query = "SELECT F_CalcularTiempo";
+                        SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                        SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+                        sqlDataAdapter.Fill(dataTable);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+
+                }
+                finally
+                {
+                    sqlConnection.Close();
+                }
             }
+        
+
+        private void Dt_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void LblEntrada_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

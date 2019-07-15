@@ -33,5 +33,16 @@ namespace Sistema_de_control_de_estacionamiento.Properties {
                 return ((string)(this["Estacionamiento"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(local)\\SQLEXPRESS;Initial Catalog=Estacionamiento;Integrated Securit" +
+            "y=True")]
+        public string Estacionamientos {
+            get {
+                return ((string)(this["Estacionamientos"]));
+            }
+        }
     }
 }
