@@ -103,7 +103,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="QueryEstacionamiento.sql" />
     <Resource Include="icon\1554271487_1.png" />
     <Content Include="ParqueoDB.sql" />
   </ItemGroup>

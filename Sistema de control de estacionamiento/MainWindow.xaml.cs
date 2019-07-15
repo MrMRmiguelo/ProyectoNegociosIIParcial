@@ -31,7 +31,7 @@ namespace Sistema_de_control_de_estacionamiento
             string connectionString = ConfigurationManager.ConnectionStrings["Sistema_de_control_de_estacionamiento.Properties.Settings.Estacionamiento"].ConnectionString;
             sqlConnection = new SqlConnection(connectionString);
            Mostrar();
-        //Registro();
+           Registro();
 
 
         }
@@ -44,6 +44,7 @@ namespace Sistema_de_control_de_estacionamiento
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+            
 
         }
 
@@ -75,7 +76,6 @@ namespace Sistema_de_control_de_estacionamiento
                     sqlCommand.Parameters.AddWithValue("@tipoVehiculo", txtTipo.Text);
                     sqlCommand.ExecuteNonQuery();
                     txtPlaca.Text = String.Empty;
-                    txtColor.Text = String.Empty;
                     txtTipo.Text = String.Empty;
 
                 }
@@ -88,7 +88,7 @@ namespace Sistema_de_control_de_estacionamiento
                 {
                     sqlConnection.Close();
                     Mostrar();
-                    //Registro();
+                    Registro();
                 }
             }
         }
@@ -122,7 +122,7 @@ namespace Sistema_de_control_de_estacionamiento
                 {
                     sqlConnection.Close();
                     Mostrar();
-                    //Registro();
+                    Registro();
                 }
            }
 
@@ -153,50 +153,30 @@ namespace Sistema_de_control_de_estacionamiento
 
             }
         }
-        private void MostrarTipo()
-        {
-            try
-            {
-                string query = "SELECT * FROM Vehiculos.vehiculo";
-
-                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, sqlConnection);
-
-                using (sqlDataAdapter)
-                {
-                    DataTable tablaVehiculo = new DataTable();
-                    sqlDataAdapter.Fill(tablaVehiculo);
-                    lblTipo.DisplayMemberPath = "tipoVehiculoE";
-                    lblTipo.SelectedValue = "numPlacaE";
-                    lblTipo.ItemsSource = tablaVehiculo.DefaultView;
-                }
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-
-            }
-        }
         
+
+       
+
+
+
+
 
       private void BtnReporte_Click(object sender, RoutedEventArgs e)
         {
-            Registro();
         }
-        
 
         
 
 
         private void LblPlaca_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            MostrarTipo();
+     
        }
-      private void Registro()
+        private void Registro()
         {
             
             sqlConnection.Open();
-            SqlCommand sqlCommand = new SqlCommand("Vehiculos.SP_PLACA_HORA_ENTRADA_SALIDA", sqlConnection);
+            SqlCommand sqlCommand = new SqlCommand("Vehiculos.SP_REPORTE", sqlConnection);
             sqlCommand.CommandType = CommandType.StoredProcedure;
             SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
              DataTable tabla = new DataTable();
@@ -204,45 +184,62 @@ namespace Sistema_de_control_de_estacionamiento
             dt.ItemsSource = tabla.DefaultView;
             sqlConnection.Close();
 
-    
+
 
         }
-        
         private void BtnSalida_Vehiculo_Click(object sender, RoutedEventArgs e)
         {
-            
-                try
-                {
-                    sqlConnection.Open();
-                    DataTable dataTable = new DataTable();
-                    using (sqlConnection)
-                    {
-                        string query = "SELECT F_CalcularTiempo";
-                        SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
-                        SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
-                        sqlDataAdapter.Fill(dataTable);
-                    }
-                }
-                catch(Exception ex)
-                {
-                    MessageBox.Show(ex.ToString());
+            try
+            {
+                string query = "UPDATE Vehiculo SET HoraSalida = GETDATE() WHERE numPlacaE = @placa";
 
-                }
-                finally
-                {
-                    sqlConnection.Close();
-                }
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+
+
+
+                sqlConnection.Open();
+
+                sqlCommand.Parameters.AddWithValue("@placa", txtPlaca.Text);
+                sqlCommand.ExecuteNonQuery();
+
+
+                txtPlaca.Text = String.Empty;
+                string a;
+                a = dt.SelectedValue.ToString();
+                if(txtTipo.Text == "Pesado")
+                MessageBox.Show("El vehiculo con numero de placa: " + a + "\nSe ah retirado exitosamente\nTotal a pagar: L.200.00\n");
+                if (txtTipo.Text == "Liviano")
+                    MessageBox.Show("El vehiculo con numero de placa: " + a + "\nSe ah retirado exitosamente\nTotal a pagar: L.100.00\n");
+                if (txtTipo.Text == "Liviano")
+                    MessageBox.Show("El vehiculo con numero de placa: " + a + "\nSe ah retirado exitosamente\nTotal a pagar: L.50.00\n");
+
             }
-        
-
-        private void Dt_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
+                catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                sqlConnection.Close();
+                Mostrar();
+            }
         }
 
-        private void LblEntrada_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            WindowState = WindowState.Maximized;
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void TxtPlaca_KeyDown(object sender, KeyEventArgs e)
+        {
+            this.txtPlaca.MaxLength = 7;
 
         }
+   
     }
 }
